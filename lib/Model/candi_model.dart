@@ -13,14 +13,13 @@ class CandiModel {
     // Initialize candies with random asset identifiers
     final random = Random();
     for (int i = 0; i < rowSize * rowSize; i++) {
-      candies.add(getRandomCandyAsset());
+      candies.add(getRandomCandyAsset(random));
     }
   }
 
-  String getRandomCandyAsset() {
+  String getRandomCandyAsset(Random random) {
     // Replace this with your logic to get a random candy asset
     final List<String> candyAssets = ["Borobudur.png", "Candi Prambanan.png", "cankuang.png"];
-    final Random random = Random();
     return candyAssets[random.nextInt(candyAssets.length)];
   }
 

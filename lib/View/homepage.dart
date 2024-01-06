@@ -1,20 +1,28 @@
 import 'package:candiboom/Controller/settings_controller.dart';
+import 'package:candiboom/Localization/locales.dart';
 import 'package:candiboom/View/menu.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
-  _HomePage createState() => _HomePage();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePage extends State<HomePage> {
+class _HomePageState extends State<HomePage> {
+  late FlutterLocalization _flutterLocalization;
   late SettingsController settingsController;
+  late String _currentLocale;
 
   @override
   void initState() {
     super.initState();
-
+    _flutterLocalization = FlutterLocalization.instance;
+    _currentLocale = _flutterLocalization.currentLocale!.languageCode;
+    print(_currentLocale);
     // Initialize controllers and settings
     settingsController = SettingsController();
   }
@@ -56,7 +64,7 @@ class _HomePage extends State<HomePage> {
                       ),
                     ),
                     child: Text(
-                      'Play',
+                      context.formatString(LocaleData.body, []),
                       style: TextStyle(fontSize: 30),
                     ),
                   ),
@@ -97,11 +105,11 @@ class _HomePage extends State<HomePage> {
         return StatefulBuilder(
           builder: (BuildContext context, setState) {
             return AlertDialog(
-              title: Text('Settings'),
+              title: Text(context.formatString(LocaleData.setting, [])),
               content: Column(
                 children: [
                   SwitchListTile(
-                    title: Text('Sound'),
+                    title: Text(context.formatString(LocaleData.sound, [])),
                     value: settingsController.model.isSoundOn,
                     onChanged: (value) {
                       setState(() {
@@ -131,6 +139,22 @@ class _HomePage extends State<HomePage> {
                 ],
               ),
               actions: [
+                DropdownButton(
+                  value: _currentLocale,
+                  items: const [
+                    DropdownMenuItem(
+                      value: "en",
+                      child: Text("English"),
+                    ),
+                    DropdownMenuItem(
+                      value: "idn",
+                      child: Text("Indonesia"),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    _setLocale(value);
+                  },
+                ),
                 ElevatedButton(
                   onPressed: () {
                     settingsController.saveSettings();
@@ -166,5 +190,19 @@ class _HomePage extends State<HomePage> {
         musicPlaying = false;
       }
     }
+  }
+
+  void _setLocale(String? value) {
+    if (value == null) return;
+    if (value == "en") {
+      _flutterLocalization.translate("en");
+    } else if (value == "idn") {
+      _flutterLocalization.translate("idn");
+    } else {
+      return;
+    }
+    setState(() {
+      _currentLocale = value;
+    });
   }
 }

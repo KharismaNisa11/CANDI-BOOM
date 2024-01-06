@@ -30,6 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localization: ^0.2.0
+  intl_translation: ^0.18.2
   file_picker: ^6.1.1
   audioplayers: ^5.2.1
   shared_preferences: ^2.0.12
